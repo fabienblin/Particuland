@@ -1,5 +1,5 @@
 # Partiucland
-A Particle simaulation based on a rulset of asymetric attraction and repulsion interaction.
+A Particle simulation based on a rulset of asymetric interactions.
 
 ## How it works
 Particles belong to a predefined set of species and each species has a certain set of attributes. The first and most obvious attribute of a species will be it's color. Then you will need to define it's interaction radius with other particles. The species will also have a maximum velocity.
