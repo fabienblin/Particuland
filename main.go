@@ -34,17 +34,17 @@ func init() {
 
 	Game.InitSpecies(RedSpecies, BlueSpecies, GreenSpecies)
 
-	SetInteraction(GreenSpecies, GreenSpecies, -0.40)
-	SetInteraction(GreenSpecies, RedSpecies, 0.22)
-	SetInteraction(GreenSpecies, BlueSpecies, 0.40)
+	// SetInteraction(GreenSpecies, GreenSpecies, -0.40)
+	// SetInteraction(GreenSpecies, RedSpecies, 0.22)
+	// SetInteraction(GreenSpecies, BlueSpecies, 0.40)
 
-	SetInteraction(RedSpecies, GreenSpecies, -0.93)
-	SetInteraction(RedSpecies, RedSpecies, -0.28)
-	SetInteraction(RedSpecies, BlueSpecies, -0.73)
+	// SetInteraction(RedSpecies, GreenSpecies, -0.93)
+	// SetInteraction(RedSpecies, RedSpecies, -0.28)
+	// SetInteraction(RedSpecies, BlueSpecies, -0.73)
 
-	SetInteraction(BlueSpecies, GreenSpecies, 0.63)
-	SetInteraction(BlueSpecies, RedSpecies, -0.86)
-	SetInteraction(BlueSpecies, BlueSpecies, 0.27)
+	// SetInteraction(BlueSpecies, GreenSpecies, 0.63)
+	// SetInteraction(BlueSpecies, RedSpecies, -0.86)
+	// SetInteraction(BlueSpecies, BlueSpecies, 0.27)
 }
 
 func main() {

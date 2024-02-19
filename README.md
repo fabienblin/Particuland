@@ -28,3 +28,6 @@ In  this example
 
 ## Optimization
 The computational cost of moving the particles get increasingly hight as the total number of particles increase, mainly because of the KNN implementation that is very basic. Instead of making a quad tree I decided to parallelize the function for each particle. Having a quad tree would certainly increase efficiency buy also the complexity of the algorithm. This would need some comparative limit testing.
+
+## Define interactions
+As a developer you can change species interactions using the SetInteraction function. By default all is random.
