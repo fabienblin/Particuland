@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"math/rand"
 )
 
 var Interactions [][]float64
@@ -32,7 +31,7 @@ func GetInteraction(A *ParticleSpecies, B *ParticleSpecies) float64 {
 const MaxInteraction float64 = 10
 
 func RandomInteraction() float64 {
-	return ((rand.Float64() * 2) - 1)
+	return ((rng.Float64() * 2) - 1)
 }
 
 func PrintInteractions() {

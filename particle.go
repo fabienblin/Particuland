@@ -3,7 +3,6 @@ package main
 import (
 	"image/color"
 	"math"
-	"math/rand"
 )
 
 // Id is auto generated
@@ -34,8 +33,8 @@ func ParticleFactory(species *ParticleSpecies) []*Particle {
 	for i := 0; i < species.NbParticles; i++ {
 		newParticle := &Particle{
 			Species:   species,
-			X:         rand.Float64() * float64(ImageWidth-1),
-			Y:         rand.Float64() * float64(ImageHeight-1),
+			X:         rng.Float64() * float64(ImageWidth-1),
+			Y:         rng.Float64() * float64(ImageHeight-1),
 			VelocityX: 0,
 			VelocityY: 0,
 		}
@@ -79,8 +78,8 @@ func UpdateParticles() [][]*Particle {
 		updatedParticles = append(updatedParticles, []*Particle{})
 		for j, particle := range species {
 			updatedParticles[i] = append(updatedParticles[i], &Particle{})
-			particle.VelocityX /= Friction
-			particle.VelocityY /= Friction
+			particle.VelocityX -= Friction * particle.VelocityX
+			particle.VelocityY -= Friction * particle.VelocityY
 			*updatedParticles[i][j] = *particle
 		}
 	}
