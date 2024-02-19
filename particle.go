@@ -13,7 +13,6 @@ type ParticleSpecies struct {
 	NbParticles       int
 	InteractionRadius float64
 	Mass              float64
-	CollisionRadius   float64
 }
 
 type Particle struct {
@@ -50,7 +49,6 @@ func AllParticleFactory(species ...*ParticleSpecies) [][]*Particle {
 		s.Id = i
 		speciesParticles := ParticleFactory(s)
 		allParticles = append(allParticles, speciesParticles)
-		s.CollisionRadius = ParticleCollisionRadius
 	}
 
 	return allParticles
@@ -98,14 +96,15 @@ func UpdateParticles() [][]*Particle {
 
 					distance, dx, dy := distance(subject, neighbour)
 
-					g := G
-					if distance < ParticleCollisionRadius {
-						g = -g
+					force := 0.0
+					if distance < subject.Species.InteractionRadius/10 {
+						force = (math.Abs(GetParticleInteraction(subject, neighbour)) * -G * subject.Species.Mass * neighbour.Species.Mass) / (distance * distance)
 					} else if distance > subject.Species.InteractionRadius {
-						g = 0
+						continue
+					} else {
+						force = (GetParticleInteraction(subject, neighbour) * G * subject.Species.Mass * neighbour.Species.Mass) / (distance * distance)
 					}
 
-					force := (GetParticleInteraction(subject, neighbour) * g * subject.Species.Mass * neighbour.Species.Mass) / (distance * distance)
 					fx += force * dx
 					fy += force * dy
 				}
@@ -114,11 +113,11 @@ func UpdateParticles() [][]*Particle {
 			// Update phase
 			update := updatedParticles[i][j]
 
-			update.VelocityX += fx * InertiaFactor * DeltaTime
-			update.VelocityY += fy * InertiaFactor * DeltaTime
+			update.VelocityX += fx
+			update.VelocityY += fy
 
-			update.X += update.VelocityX * DeltaTime
-			update.Y += update.VelocityY * DeltaTime
+			update.X += update.VelocityX
+			update.Y += update.VelocityY
 
 			handleBorderCollision(update)
 		}

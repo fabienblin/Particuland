@@ -11,14 +11,12 @@ import (
 )
 
 const (
-	G                       float64 = 1 // 6.67430e-11
-	imageSize               int     = 50
-	ImageHeight             int     = imageSize * 9
-	ImageWidth              int     = imageSize * 16
-	InertiaFactor           float64 = 0.5
-	ParticleCollisionRadius float64 = 10
-	DeltaTime               float64 = 1
-	Friction                float64 = 0.2
+	G           float64 = 1 // 6.67430e-11
+	imageSize   int     = 50
+	ImageHeight int     = imageSize * 9
+	ImageWidth  int     = imageSize * 16
+	DeltaTime float64 = 8
+	Friction  float64 = 0.1
 )
 
 var Game *GameEngine = &GameEngine{}
