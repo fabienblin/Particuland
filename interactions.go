@@ -16,7 +16,7 @@ func InitInteractions(species ...*ParticleSpecies) {
 
 	for _, sA := range species {
 		for _, sB := range species {
-			SetInteraction(sA, sB, 1)
+			SetInteraction(sA, sB, RandomInteraction())
 		}
 	}
 }
@@ -32,7 +32,7 @@ func GetInteraction(A *ParticleSpecies, B *ParticleSpecies) float64 {
 const MaxInteraction float64 = 10
 
 func RandomInteraction() float64 {
-	return (rand.Float64() * 2 * MaxInteraction) - MaxInteraction
+	return ((rand.Float64() * 2) - 1)
 }
 
 func PrintInteractions() {

@@ -8,13 +8,13 @@ import (
 
 // Id is auto generated
 type ParticleSpecies struct {
-	Id          int
-	Name        string
-	Color       color.RGBA
-	NbParticles int
-	// InteractionRadius float64
-	Mass            float64
-	CollisionRadius float64
+	Id                int
+	Name              string
+	Color             color.RGBA
+	NbParticles       int
+	InteractionRadius float64
+	Mass              float64
+	CollisionRadius   float64
 }
 
 type Particle struct {
@@ -79,6 +79,8 @@ func UpdateParticles() [][]*Particle {
 		updatedParticles = append(updatedParticles, []*Particle{})
 		for j, particle := range species {
 			updatedParticles[i] = append(updatedParticles[i], &Particle{})
+			particle.VelocityX /= Friction
+			particle.VelocityY /= Friction
 			*updatedParticles[i][j] = *particle
 		}
 	}
@@ -97,7 +99,14 @@ func UpdateParticles() [][]*Particle {
 
 					distance, dx, dy := distance(subject, neighbour)
 
-					force := (GetParticleInteraction(subject, neighbour) * G * subject.Species.Mass * neighbour.Species.Mass) / (distance)
+					g := G
+					if distance < ParticleCollisionRadius {
+						g = -g
+					} else if distance > subject.Species.InteractionRadius {
+						g = 0
+					}
+
+					force := (GetParticleInteraction(subject, neighbour) * g * subject.Species.Mass * neighbour.Species.Mass) / (distance * distance)
 					fx += force * dx
 					fy += force * dy
 				}
@@ -106,11 +115,11 @@ func UpdateParticles() [][]*Particle {
 			// Update phase
 			update := updatedParticles[i][j]
 
-			update.VelocityX = ((update.VelocityX + fx) * (update.Species.Mass * InertiaFactor))
-			update.VelocityY = ((update.VelocityY + fy) * (update.Species.Mass * InertiaFactor))
+			update.VelocityX += fx * InertiaFactor * DeltaTime
+			update.VelocityY += fy * InertiaFactor * DeltaTime
 
-			update.X = (update.X + update.VelocityX)
-			update.Y = (update.Y + update.VelocityY)
+			update.X += update.VelocityX * DeltaTime
+			update.Y += update.VelocityY * DeltaTime
 
 			handleBorderCollision(update)
 		}
