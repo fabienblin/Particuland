@@ -8,11 +8,11 @@ import (
 // Id is auto generated
 type ParticleSpecies struct {
 	Id                int
-	Name              string
+	Name              string `mapstructure:"Name"`
 	Color             color.RGBA
-	NbParticles       int
-	InteractionRadius float64
-	Mass              float64
+	NbParticles       int `mapstructure:"NbParticles"`
+	InteractionRadius float64 `mapstructure:"InteractionRadius"`
+	Mass              float64 `mapstructure:"Mass"`
 }
 
 type Particle struct {
@@ -43,7 +43,7 @@ func ParticleFactory(species *ParticleSpecies) []*Particle {
 	return particleLst
 }
 
-func AllParticleFactory(species ...*ParticleSpecies) [][]*Particle {
+func AllParticleFactory(species []*ParticleSpecies) [][]*Particle {
 	allParticles := [][]*Particle{}
 	for i, s := range species {
 		s.Id = i
@@ -76,8 +76,8 @@ func UpdateParticles() [][]*Particle {
 		updatedParticles = append(updatedParticles, []*Particle{})
 		for j, particle := range species {
 			updatedParticles[i] = append(updatedParticles[i], &Particle{})
-			particle.VelocityX -= Friction * particle.VelocityX
-			particle.VelocityY -= Friction * particle.VelocityY
+			particle.VelocityX -= config.Friction * particle.VelocityX
+			particle.VelocityY -= config.Friction * particle.VelocityY
 			*updatedParticles[i][j] = *particle
 		}
 	}
@@ -97,12 +97,12 @@ func UpdateParticles() [][]*Particle {
 					distance, dx, dy := distance(subject, neighbour)
 
 					force := 0.0
-					if distance < subject.Species.InteractionRadius/10 {
-						force = (math.Abs(GetParticleInteraction(subject, neighbour)) * -G * subject.Species.Mass * neighbour.Species.Mass) / (distance * distance)
+					if distance < 5 + (subject.Species.InteractionRadius / 10) {
+						force = (math.Abs(GetParticleInteraction(subject, neighbour)) * -config.G * subject.Species.Mass * neighbour.Species.Mass) / (distance * distance)
 					} else if distance > subject.Species.InteractionRadius {
 						continue
 					} else {
-						force = (GetParticleInteraction(subject, neighbour) * G * subject.Species.Mass * neighbour.Species.Mass) / (distance * distance)
+						force = (GetParticleInteraction(subject, neighbour) * config.G * subject.Species.Mass * neighbour.Species.Mass) / (distance * distance)
 					}
 
 					fx += force * dx
@@ -113,11 +113,11 @@ func UpdateParticles() [][]*Particle {
 			// Update phase
 			update := updatedParticles[i][j]
 
-			update.VelocityX += fx
-			update.VelocityY += fy
+			update.VelocityX += fx * config.DeltaTime
+			update.VelocityY += fy * config.DeltaTime
 
-			update.X += update.VelocityX
-			update.Y += update.VelocityY
+			update.X += update.VelocityX* config.DeltaTime
+			update.Y += update.VelocityY* config.DeltaTime
 
 			handleBorderCollision(update)
 		}

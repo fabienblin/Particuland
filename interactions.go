@@ -7,7 +7,7 @@ import (
 var Interactions [][]float64
 
 // Create table of particle interactions, a square of
-func InitInteractions(species ...*ParticleSpecies) {
+func InitInteractions(species []*ParticleSpecies) {
 	Interactions = make([][]float64, len(species))
 	for i := range species {
 		Interactions[i] = make([]float64, len(species))

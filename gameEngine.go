@@ -15,9 +15,9 @@ type GameEngine struct {
 	// MovedParticles [][]*Particle
 }
 
-func (g *GameEngine) InitSpecies(species ...*ParticleSpecies) {
-	g.Particles = AllParticleFactory(species...)
-	InitInteractions(species...)
+func (g *GameEngine) InitSpecies(species []*ParticleSpecies) {
+	g.Particles = AllParticleFactory(species)
+	InitInteractions(species)
 	g.Species = species
 }
 
