@@ -1,28 +1,35 @@
 package main
 
 import (
+	"flag"
 	"image/color"
 	"log"
 	"math/rand"
 
-	"flag"
-
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/mitchellh/mapstructure"
+	"github.com/spf13/viper"
 )
 
-const (
-	G           float64 = 1 // 6.67430e-11
-	imageSize   int     = 50
-	ImageHeight int     = imageSize * 9
-	ImageWidth  int     = imageSize * 16
-	DeltaTime float64 = 8
-	Friction  float64 = 0.1
-)
+type Config struct {
+	G         float64           `mapstructure:"G"`
+	ImageSize int               `mapstructure:"imageSize"`
+	DeltaTime float64           `mapstructure:"deltaTime"`
+	Friction  float64           `mapstructure:"friction"`
+	Species   []ParticleSpecies `mapstructure:"species"`
+}
 
-var Game *GameEngine = &GameEngine{}
-var rng *rand.Rand
+var (
+	ImageHeight int = 9
+	ImageWidth  int = 16
+	config      Config
+	Game        *GameEngine = &GameEngine{}
+	rng         *rand.Rand
+)
 
 func init() {
+	var configFile = flag.String("config", "./config.json", "The config file.")
+
 	var argSeed = flag.Int("seed", -1, "Seed for recreating a scenario.")
 	flag.Parse()
 
@@ -31,30 +38,15 @@ func init() {
 		seed = rand.Int63()
 	}
 
+	readConfig(*configFile)
+
 	rng = rand.New(rand.NewSource(seed))
 	log.Printf("Seed %d", seed)
 
 	Game.Image = ebiten.NewImage(ImageWidth, ImageHeight)
 
-	RedSpecies := &ParticleSpecies{Name: "Red", Color: color.RGBA{238, 36, 39, 255}, NbParticles: 100, Mass: 1, InteractionRadius: 60}
-	BlueSpecies := &ParticleSpecies{Name: "Blue", Color: color.RGBA{139, 141, 255, 255}, NbParticles: 100, Mass: 1, InteractionRadius: 60}
-	GreenSpecies := &ParticleSpecies{Name: "Green", Color: color.RGBA{50, 200, 50, 255}, NbParticles: 100, Mass: 1, InteractionRadius: 60}
-	YellowSpecies := &ParticleSpecies{Name: "Yellow", Color: color.RGBA{202, 200, 0, 255}, NbParticles: 100, Mass: 1, InteractionRadius: 60}
-	WhiteSpecies := &ParticleSpecies{Name: "White", Color: color.RGBA{255, 255, 255, 255}, NbParticles: 100, Mass: 1, InteractionRadius: 60}
-
-	Game.InitSpecies(RedSpecies, BlueSpecies, GreenSpecies, YellowSpecies, WhiteSpecies)
-
-	// SetInteraction(GreenSpecies, GreenSpecies, -0.40)
-	// SetInteraction(GreenSpecies, RedSpecies, 0.22)
-	// SetInteraction(GreenSpecies, BlueSpecies, 0.40)
-
-	// SetInteraction(RedSpecies, GreenSpecies, -0.93)
-	// SetInteraction(RedSpecies, RedSpecies, -0.28)
-	// SetInteraction(RedSpecies, BlueSpecies, -0.73)
-
-	// SetInteraction(BlueSpecies, GreenSpecies, 0.63)
-	// SetInteraction(BlueSpecies, RedSpecies, -0.86)
-	// SetInteraction(BlueSpecies, BlueSpecies, 0.27)
+	speciesArray := getSpeciesFromConfig()
+	Game.InitSpecies(speciesArray)
 }
 
 func main() {
@@ -70,4 +62,47 @@ func main() {
 	if err := ebiten.RunGame(Game); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func readConfig(configFile string) {
+	viper.SetConfigFile(configFile)
+
+	if err := viper.ReadInConfig(); err != nil {
+		log.Fatalf("Error reading config file: %v", err)
+	}
+
+	if err := viper.Unmarshal(&config); err != nil {
+		log.Fatalf("Error unmarshalling config: %v", err)
+	}
+
+	ImageHeight *= config.ImageSize
+	ImageWidth *= config.ImageSize
+}
+
+func getSpeciesFromConfig() []*ParticleSpecies {
+	var speciesArray []*ParticleSpecies
+
+	// Retrieve the array of species from the config
+	speciesConfigArray := viper.Get("species").([]interface{})
+
+	// Convert each species configuration to ParticleSpecies
+	for _, speciesConfig := range speciesConfigArray {
+		var species *ParticleSpecies
+		if err := mapstructure.Decode(speciesConfig, &species); err != nil {
+			log.Fatalf("Error decoding species config: %v", err)
+		}
+
+		color := color.RGBA{species.Color.R, species.Color.G, species.Color.B, 255}
+		particleSpecies := &ParticleSpecies{
+			Name:              species.Name,
+			Color:             color,
+			NbParticles:       species.NbParticles,
+			Mass:              species.Mass,
+			InteractionRadius: species.InteractionRadius,
+		}
+
+		speciesArray = append(speciesArray, particleSpecies)
+	}
+
+	return speciesArray
 }

@@ -51,3 +51,5 @@ Dans l'exemple en dessous vous voyez 3 espèces, rouge ❤️ , verte 💚 et bl
 Hésitez pas à tester par vous-même et me dire si vous tombez sur des choses intéressantes !
 
 #golang #generativeart #ebitengine #newton #particlelife
+## Try these seeds
+6305443024053019540
