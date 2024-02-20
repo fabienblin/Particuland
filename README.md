@@ -1,4 +1,4 @@
-# Partiucland
+# Particuland
 A particle simulation based on a rulset of asymetric interactions.
 ![alt](https://github.com/fabienblin/Particuland/blob/main/particuland.gif)
 

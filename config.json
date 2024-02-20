@@ -1,6 +1,6 @@
 {
     "G": 1,
-    "imageSize" : 30,
+    "imageSize" : 50,
     "deltaTime": 1.5,
     "friction": 0.1,
     "species": [
