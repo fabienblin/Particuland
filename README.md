@@ -36,20 +36,11 @@ In  this example
 ## Optimization
 The computational cost of moving the particles get increasingly hight as the total number of particles increase, mainly because of the KNN implementation that is very basic. Instead of making a quad tree I decided to parallelize the function for each particle. Having a quad tree would certainly increase efficiency buy also the complexity of the algorithm. This would need some comparative limit testing.
 
+
 ## Define interactions
 As a developer you can change species interactions using the SetInteraction function. By default all is random.
 
-Salut la Gophosphère,
 
-
-Au menu aujourd'hui, un assortiment de particules sur fond noir, sauce newtonienne. Je vous présente Particuland https://lnkd.in/eGVZ-dS7, un monde où tout est particule, chacune avec sa personnalité, son charme et son histoire.
-
-Pour expliquer un peu la magie 🤩 , vous avez des espèces de particules, avec chacune leur couleur et surtout leur forces d’interactions avec les autres espèces, ensuite chaque particule a un vecteur de vélocité. Tout ça est donné à la loi universelle de la gravitation de Newton et BIM ! (ça fait des chocapics)
-
-Dans l'exemple en dessous vous voyez 3 espèces, rouge ❤️ , verte 💚 et bleue 💙 , ce qui fait 9 interactions. Avec des valeurs au hasard je suis tombé sur cette configuration où les particules bleues semblent former un triangle avec du vert . Et puis le rouge se tient loin en formant une sorte de barrière le plus loin possible.
-
-Hésitez pas à tester par vous-même et me dire si vous tombez sur des choses intéressantes !
-
-#golang #generativeart #ebitengine #newton #particlelife
 ## Try these seeds
 6305443024053019540
+7072156136643436180

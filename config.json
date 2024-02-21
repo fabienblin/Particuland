@@ -1,7 +1,7 @@
 {
     "G": 1,
     "imageSize" : 50,
-    "deltaTime": 1.5,
+    "deltaTime": 1.1,
     "friction": 0.1,
     "species": [
         {"Name": "Red", "Color": {"r":238, "g":36, "b":39}, "NbParticles": 100, "Mass": 1, "InteractionRadius": 60},
