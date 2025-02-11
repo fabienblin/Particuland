@@ -1,13 +1,15 @@
 {
-    "G": 1,
     "imageSize" : 50,
-    "deltaTime": 1.1,
+    "deltaTime": 0.5,
     "friction": 0.1,
+	"repelDistance": 20.0,
     "species": [
-        {"Name": "Red", "Color": {"r":238, "g":36, "b":39}, "NbParticles": 100, "Mass": 1, "InteractionRadius": 60},
-        {"Name": "Blue", "Color": {"r":139, "g":141, "b":255}, "NbParticles": 100, "Mass": 1, "InteractionRadius": 60},
-        {"Name": "Green", "Color": {"r":50, "g":200, "b":50}, "NbParticles": 100, "Mass": 1, "InteractionRadius": 60},
-        {"Name": "Yellow", "Color": {"r":202, "g":200, "b":0}, "NbParticles": 100, "Mass": 1, "InteractionRadius": 60},
-        {"Name": "White", "Color": {"r":255, "g":255, "b":255}, "NbParticles": 100, "Mass": 1, "InteractionRadius": 60}
+        {"Name": "white", "Color": {"r":255, "g":255, "b":255},	"NbParticles": 200, "InteractionRadius": 100},
+        {"Name": "red  ", "Color": {"r":255, "g":0, "b":0},		"NbParticles": 200, "InteractionRadius": 100},
+        {"Name": "green", "Color": {"r":0, "g":255, "b":0},		"NbParticles": 200, "InteractionRadius": 100},
+        {"Name": "blue ", "Color": {"r":0, "g":0, "b":255},		"NbParticles": 200, "InteractionRadius": 100},
+        {"Name": "yello", "Color": {"r":255, "g":255, "b":0},	"NbParticles": 200, "InteractionRadius": 100},
+        {"Name": "purpl", "Color": {"r":255, "g":0, "b":255},	"NbParticles": 200, "InteractionRadius": 100},
+		{"Name": "orang", "Color": {"r":255, "g":155, "b":0},	"NbParticles": 200, "InteractionRadius": 100}
     ]
 }

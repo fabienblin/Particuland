@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"image/color"
 	"log"
 	"math/rand"
@@ -12,11 +13,11 @@ import (
 )
 
 type Config struct {
-	G         float64           `mapstructure:"G"`
-	ImageSize int               `mapstructure:"imageSize"`
-	DeltaTime float64           `mapstructure:"deltaTime"`
-	Friction  float64           `mapstructure:"friction"`
-	Species   []ParticleSpecies `mapstructure:"species"`
+	ImageSize     int               `mapstructure:"imageSize"`
+	DeltaTime     float64           `mapstructure:"deltaTime"`
+	Friction      float64           `mapstructure:"friction"`
+	RepelDistance float64           `mapstructure:"repelDistance"`
+	Species       []ParticleSpecies `mapstructure:"species"`
 }
 
 var (
@@ -51,6 +52,7 @@ func init() {
 
 func main() {
 	PrintInteractions()
+	fmt.Printf("%+v", config)
 
 	// Specify the window size as you like. Here, a doubled size is specified.
 	ebiten.SetWindowSize(ImageWidth, ImageHeight)
@@ -97,7 +99,6 @@ func getSpeciesFromConfig() []*ParticleSpecies {
 			Name:              species.Name,
 			Color:             color,
 			NbParticles:       species.NbParticles,
-			Mass:              species.Mass,
 			InteractionRadius: species.InteractionRadius,
 		}
 

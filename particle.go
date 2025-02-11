@@ -10,9 +10,8 @@ type ParticleSpecies struct {
 	Id                int
 	Name              string `mapstructure:"Name"`
 	Color             color.RGBA
-	NbParticles       int `mapstructure:"NbParticles"`
+	NbParticles       int     `mapstructure:"NbParticles"`
 	InteractionRadius float64 `mapstructure:"InteractionRadius"`
-	Mass              float64 `mapstructure:"Mass"`
 }
 
 type Particle struct {
@@ -54,22 +53,6 @@ func AllParticleFactory(species []*ParticleSpecies) [][]*Particle {
 	return allParticles
 }
 
-func (p *Particle) RangeSearch() [][]*Particle {
-	result := [][]*Particle{}
-
-	for _, species := range Game.Particles {
-		resultSpecies := []*Particle{}
-		for _, particle := range species {
-			if p != particle {
-				resultSpecies = append(resultSpecies, particle)
-			}
-		}
-		result = append(result, resultSpecies)
-	}
-
-	return result
-}
-
 func UpdateParticles() [][]*Particle {
 	updatedParticles := [][]*Particle{}
 	for i, species := range Game.Particles {
@@ -83,13 +66,13 @@ func UpdateParticles() [][]*Particle {
 	}
 
 	// Force calculation phase
-	for i, species := range Game.Particles {
-		for j, subject := range species {
+	for i := range Game.Particles {
+		for j, subject := range Game.Particles[i] {
 			var fx, fy float64
 
 			// Accumulate forces from all neighbors
-			for _, species := range Game.Particles {
-				for _, neighbour := range species {
+			for k := range Game.Particles {
+				for _, neighbour := range Game.Particles[k] {
 					if subject == neighbour {
 						continue
 					}
@@ -97,12 +80,12 @@ func UpdateParticles() [][]*Particle {
 					distance, dx, dy := distance(subject, neighbour)
 
 					force := 0.0
-					if distance < 5 + (subject.Species.InteractionRadius / 10) {
-						force = (math.Abs(GetParticleInteraction(subject, neighbour)) * -config.G * subject.Species.Mass * neighbour.Species.Mass) / (distance * distance)
+					if distance < config.RepelDistance {
+						force = -math.Abs(GetParticleInteraction(subject, neighbour)) / (distance * distance)
 					} else if distance > subject.Species.InteractionRadius {
 						continue
 					} else {
-						force = (GetParticleInteraction(subject, neighbour) * config.G * subject.Species.Mass * neighbour.Species.Mass) / (distance * distance)
+						force = GetParticleInteraction(subject, neighbour) / (distance * distance)
 					}
 
 					fx += force * dx
@@ -116,8 +99,8 @@ func UpdateParticles() [][]*Particle {
 			update.VelocityX += fx * config.DeltaTime
 			update.VelocityY += fy * config.DeltaTime
 
-			update.X += update.VelocityX* config.DeltaTime
-			update.Y += update.VelocityY* config.DeltaTime
+			update.X += update.VelocityX
+			update.Y += update.VelocityY
 
 			handleBorderCollision(update)
 		}
@@ -127,26 +110,34 @@ func UpdateParticles() [][]*Particle {
 }
 
 func distance(A, B *Particle) (float64, float64, float64) {
-	dx := B.X - A.X
-	dy := B.Y - A.Y
+    dx := B.X - A.X
+    dy := B.Y - A.Y
 
-	return math.Sqrt(dx*dx + dy*dy), dx, dy
+    if dx > float64(ImageWidth)/2 {
+        dx -= float64(ImageWidth)
+    } else if dx < -float64(ImageWidth)/2 {
+        dx += float64(ImageWidth)
+    }
+
+    if dy > float64(ImageHeight)/2 {
+        dy -= float64(ImageHeight)
+    } else if dy < -float64(ImageHeight)/2 {
+        dy += float64(ImageHeight)
+    }
+
+    return math.Sqrt(dx*dx + dy*dy), dx, dy
 }
 
 func handleBorderCollision(p *Particle) {
-	if p.X < 0 {
-		p.X = -p.X
-		p.VelocityX = -p.VelocityX
-	} else if p.X > float64(ImageWidth) {
-		p.X = float64(ImageWidth) - (p.X - float64(ImageWidth))
-		p.VelocityX = -p.VelocityX
-	}
+    if p.X < 0 {
+        p.X += float64(ImageWidth)
+    } else if p.X > float64(ImageWidth) {
+        p.X -= float64(ImageWidth)
+    }
 
-	if p.Y < 0 {
-		p.Y = -p.Y
-		p.VelocityY = -p.VelocityY
-	} else if p.Y > float64(ImageHeight) {
-		p.Y = float64(ImageHeight) - (p.Y - float64(ImageHeight))
-		p.VelocityY = -p.VelocityY
-	}
+    if p.Y < 0 {
+        p.Y += float64(ImageHeight)
+    } else if p.Y > float64(ImageHeight) {
+        p.Y -= float64(ImageHeight)
+    }
 }
